@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29319.158
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JOS.FlatDictionary", "src\JOS.FlatDictionary\JOS.FlatDictionary.csproj", "{0BB82DC7-C075-4B6A-B86B-95784740BB20}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{8AC382C8-506C-4D13-87BC-51494345AB85}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		global.json = global.json
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E702CF83-A25B-4854-92F8-7B7DDC01B4EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E40E6DC9-28C9-4BD6-B9DB-C9EE7607322F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JOS.FlatDictionary.Tests", "test\JOS.FlatDictionary.Tests\JOS.FlatDictionary.Tests.csproj", "{6E4F7912-8964-40A9-9479-7276EAAB0CEA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JOS.FlatDictionary.Benchmarks", "test\JOS.FlatDictionary.Benchmarks\JOS.FlatDictionary.Benchmarks.csproj", "{36DCAC8D-80EB-47E8-9D67-A7D67AEF0282}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0BB82DC7-C075-4B6A-B86B-95784740BB20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BB82DC7-C075-4B6A-B86B-95784740BB20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BB82DC7-C075-4B6A-B86B-95784740BB20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BB82DC7-C075-4B6A-B86B-95784740BB20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E4F7912-8964-40A9-9479-7276EAAB0CEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E4F7912-8964-40A9-9479-7276EAAB0CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E4F7912-8964-40A9-9479-7276EAAB0CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E4F7912-8964-40A9-9479-7276EAAB0CEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36DCAC8D-80EB-47E8-9D67-A7D67AEF0282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36DCAC8D-80EB-47E8-9D67-A7D67AEF0282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36DCAC8D-80EB-47E8-9D67-A7D67AEF0282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36DCAC8D-80EB-47E8-9D67-A7D67AEF0282}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0BB82DC7-C075-4B6A-B86B-95784740BB20} = {E702CF83-A25B-4854-92F8-7B7DDC01B4EB}
+		{6E4F7912-8964-40A9-9479-7276EAAB0CEA} = {E40E6DC9-28C9-4BD6-B9DB-C9EE7607322F}
+		{36DCAC8D-80EB-47E8-9D67-A7D67AEF0282} = {E40E6DC9-28C9-4BD6-B9DB-C9EE7607322F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7B2916E2-D717-4748-BEFC-00BBBEA927F5}
+	EndGlobalSection
+EndGlobal
