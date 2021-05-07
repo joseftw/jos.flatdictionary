@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 
 namespace JOS.FlatDictionary
 {
@@ -19,7 +19,7 @@ namespace JOS.FlatDictionary
             object source,
             string name)
         {
-            var properties = source.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            var properties = source.GetType().GetProperties().Where(x => x.CanRead);
             foreach (var property in properties)
             {
                 var key = string.IsNullOrWhiteSpace(name) ? property.Name : $"{name}.{property.Name}";
@@ -31,20 +31,14 @@ namespace JOS.FlatDictionary
                     continue;
                 }
 
-                if (property.PropertyType.IsValueType || property.PropertyType == typeof(string))
+                if (property.PropertyType.IsValueTypeOrString())
                 {
-                    if (value is DateTime dateTime)
+                    dictionary[key] = value switch
                     {
-                        dictionary[key] = dateTime.ToString("o");
-                    }
-                    else if (value is bool @bool)
-                    {
-                        dictionary[key] = @bool.ToString().ToLower();
-                    }
-                    else
-                    {
-                        dictionary[key] = value.ToString();
-                    }
+                        DateTime dateTime => dateTime.ToString("o"),
+                        bool @bool => @bool.ToString().ToLower(),
+                        _ => value.ToString()
+                    };
                 }
                 else if (value is IEnumerable enumerable)
                 {
@@ -52,7 +46,7 @@ namespace JOS.FlatDictionary
                     foreach (var item in enumerable)
                     {
                         var itemKey = $"{key}[{counter++}]";
-                        if (item.GetType().IsReferenceType())
+                        if (!item.GetType().IsValueTypeOrString())
                         {
                             Flatten(dictionary, item, itemKey);
                         }

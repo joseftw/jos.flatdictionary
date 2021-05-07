@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections;
 
 namespace JOS.FlatDictionary
 {
-    public static class Extensions
+    internal static class Extensions
     {
-        public static bool IsReferenceType(this Type type)
+        internal static bool IsValueTypeOrString(this Type type)
         {
-            return !type.IsValueType && type != typeof(string);
+            return type.IsValueType || type == typeof(string);
         }
 
-        public static string FormatValue(this object value)
+        internal static string FormatValue(this object value)
         {
             return value switch
             {
@@ -17,6 +18,11 @@ namespace JOS.FlatDictionary
                 bool boolean => boolean.ToString().ToLower(),
                 _ => value.ToString()
             };
+        }
+
+        internal static bool IsIEnumerable(this Type type)
+        {
+            return type.IsAssignableTo(typeof(IEnumerable));
         }
     }
 }

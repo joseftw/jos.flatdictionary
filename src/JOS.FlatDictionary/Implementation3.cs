@@ -10,11 +10,11 @@ namespace JOS.FlatDictionary
 {
     public class Implementation3 : IFlatDictionaryProvider
     {
-        private static readonly ConcurrentDictionary<Type, Dictionary<PropertyInfo, Func<object, object>>> CachedGetters;
+        private static readonly ConcurrentDictionary<Type, Dictionary<PropertyInfo, Func<object, object>>> CachedProperties;
 
         static Implementation3()
         {
-            CachedGetters = new ConcurrentDictionary<Type, Dictionary<PropertyInfo, Func<object, object>>>();
+            CachedProperties = new ConcurrentDictionary<Type, Dictionary<PropertyInfo, Func<object, object>>>();
         }
 
         public Dictionary<string, string> Execute(object @object, string prefix = "")
@@ -22,16 +22,16 @@ namespace JOS.FlatDictionary
             return ExecuteInternal(@object, prefix: prefix);
         }
 
-        public Dictionary<string, string> ExecuteInternal(
+        private static Dictionary<string, string> ExecuteInternal(
             object @object,
             Dictionary<string, string> dictionary = default,
             string prefix = "")
         {
             dictionary ??= new Dictionary<string, string>();
             var type = @object.GetType();
-            var items = GetProperties(type);
+            var properties = GetProperties(type);
 
-            foreach (var (property, getter) in items)
+            foreach (var (property, getter) in properties)
             {
                 var key = string.IsNullOrWhiteSpace(prefix) ? property.Name : $"{prefix}.{property.Name}";
                 var value = getter(@object);
@@ -42,81 +42,80 @@ namespace JOS.FlatDictionary
                     continue;
                 }
 
-                if (!property.PropertyType.IsReferenceType())
+                if (!property.PropertyType.IsValueTypeOrString())
                 {
-                    dictionary.Add(key, value.FormatValue());
-                    continue;
-                }
-
-                if (value is IEnumerable enumerable)
-                {
-                    var counter = 0;
-                    foreach (var item in enumerable)
+                    if (value is IEnumerable enumerable)
                     {
-                        var itemKey = $"{key}[{counter++}]";
-                        if (item.GetType().IsReferenceType())
+                        var counter = 0;
+                        foreach (var item in enumerable)
                         {
-                            ExecuteInternal(item, dictionary, itemKey);
+                            var itemKey = $"{key}[{counter++}]";
+                            var itemType = item.GetType();
+                            if (!itemType.IsValueTypeOrString())
+                            {
+                                ExecuteInternal(item, dictionary, itemKey);
+                            }
+                            else
+                            {
+                                dictionary.Add(itemKey, item.FormatValue());
+                            }
                         }
-                        else
-                        {
-                            dictionary.Add(itemKey, item.FormatValue());
-                        }
+                    }
+                    else
+                    {
+                        ExecuteInternal(value, dictionary, key);
                     }
                 }
                 else
                 {
-                    ExecuteInternal(value, dictionary, key);
+                    dictionary.Add(key, value.FormatValue());
                 }
             }
-
 
             return dictionary;
         }
 
         private static Dictionary<PropertyInfo, Func<object, object>> GetProperties(Type type)
         {
-            if (CachedGetters.TryGetValue(type, out var properties))
+            if (CachedProperties.TryGetValue(type, out var properties))
             {
                 return properties;
             }
 
-            CacheGetters(type);
-            return CachedGetters[type];
+            CacheProperties(type);
+            return CachedProperties[type];
         }
-
-        private static void CacheGetters(Type type)
+        
+        private static void CacheProperties(Type type)
         {
-            if (CachedGetters.ContainsKey(type))
+            if (CachedProperties.ContainsKey(type))
             {
                 return;
             }
 
-            CachedGetters[type] = new Dictionary<PropertyInfo, Func<object, object>>();
+            CachedProperties[type] = new Dictionary<PropertyInfo, Func<object, object>>();
             var properties = type.GetProperties().Where(x => x.CanRead);
             foreach (var propertyInfo in properties)
             {
                 var getter = CompilePropertyGetter(propertyInfo);
-                CachedGetters[type].Add(propertyInfo, getter);
-                if (propertyInfo.PropertyType == typeof(string) || propertyInfo.PropertyType.IsValueType)
+                CachedProperties[type].Add(propertyInfo, getter);
+                if (propertyInfo.PropertyType.IsValueTypeOrString())
                 {
-                    continue;
-                }
-                
-                if (propertyInfo.PropertyType.IsAssignableTo(typeof(IEnumerable)))
-                {
-                    var types = propertyInfo.PropertyType.GetGenericArguments();
-                    foreach (var genericType in types)
+                    if (propertyInfo.PropertyType.IsIEnumerable())
                     {
-                        if (!genericType.IsValueType && genericType != typeof(string))
+                        var types = propertyInfo.PropertyType.GetGenericArguments();
+                        foreach (var genericType in types)
                         {
-                            CacheGetters(genericType);
+                            if (!genericType.IsValueTypeOrString())
+                            {
+                                CacheProperties(genericType);
+                            }
                         }
                     }
-                }
-                else
-                {
-                    CacheGetters(propertyInfo.PropertyType);
+                    else
+                    {
+                        CacheProperties(propertyInfo.PropertyType);
+                    }
                 }
             }
         }

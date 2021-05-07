@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JOS.FlatDictionary
 {
-    public class Implementation4HardCoded : IFlatDictionaryProvider
+    public class HardCodedImplementation : IFlatDictionaryProvider
     {
         public Dictionary<string, string> Execute(object @object, string prefix = "")
         {

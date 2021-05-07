@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace JOS.FlatDictionary
@@ -39,20 +40,14 @@ namespace JOS.FlatDictionary
                     continue;
                 }
 
-                if (property.PropertyType.IsValueType || property.PropertyType == typeof(string))
+                if (property.PropertyType.IsValueTypeOrString())
                 {
-                    if (value is DateTime dateTime)
+                    dictionary[key] = value switch
                     {
-                        dictionary[key] = dateTime.ToString("o");
-                    }
-                    else if (value is bool @bool)
-                    {
-                        dictionary[key] = @bool.ToString().ToLower();
-                    }
-                    else
-                    {
-                        dictionary[key] = value.ToString();
-                    }
+                        DateTime dateTime => dateTime.ToString("o"),
+                        bool @bool => @bool.ToString().ToLower(),
+                        _ => value.ToString()
+                    };
                 }
                 else if (value is IEnumerable enumerable)
                 {
@@ -60,7 +55,7 @@ namespace JOS.FlatDictionary
                     foreach (var item in enumerable)
                     {
                         var itemKey = $"{key}[{counter++}]";
-                        if (item.GetType().IsReferenceType())
+                        if (!item.GetType().IsValueTypeOrString())
                         {
                             Flatten(dictionary, item, itemKey);
                         }
@@ -84,7 +79,7 @@ namespace JOS.FlatDictionary
                 return result;
             }
 
-            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            var properties = type.GetProperties().Where(x => x.CanRead).ToArray();
             CachedTypeProperties.TryAdd(type, properties);
             return properties;
         }

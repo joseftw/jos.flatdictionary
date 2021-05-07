@@ -63,7 +63,7 @@ namespace JOS.FlatDictionary.Tests
         [InlineData(typeof(Implementation1))]
         [InlineData(typeof(Implementation2))]
         [InlineData(typeof(Implementation3))]
-        [InlineData(typeof(Implementation4HardCoded))]
+        [InlineData(typeof(HardCodedImplementation))]
         public void ShouldHandleValueTypesAndStringsCorrectly(Type implementationType)
         {
             var sut = (IFlatDictionaryProvider)Activator.CreateInstance(implementationType);
@@ -81,7 +81,7 @@ namespace JOS.FlatDictionary.Tests
         [InlineData(typeof(Implementation1))]
         [InlineData(typeof(Implementation2))]
         [InlineData(typeof(Implementation3))]
-        [InlineData(typeof(Implementation4HardCoded))]
+        [InlineData(typeof(HardCodedImplementation))]
         public void ShouldHandleReferenceTypeProperties(Type implementationType)
         {
             var sut = (IFlatDictionaryProvider)Activator.CreateInstance(implementationType);
@@ -99,7 +99,7 @@ namespace JOS.FlatDictionary.Tests
         [InlineData(typeof(Implementation1))]
         [InlineData(typeof(Implementation2))]
         [InlineData(typeof(Implementation3))]
-        [InlineData(typeof(Implementation4HardCoded))]
+        [InlineData(typeof(HardCodedImplementation))]
         public void ShouldHandleIEnumerableStringProperties(Type implementationType)
         {
             var sut = (IFlatDictionaryProvider)Activator.CreateInstance(implementationType);
@@ -117,7 +117,7 @@ namespace JOS.FlatDictionary.Tests
         [InlineData(typeof(Implementation1))]
         [InlineData(typeof(Implementation2))]
         [InlineData(typeof(Implementation3))]
-        [InlineData(typeof(Implementation4HardCoded))]
+        [InlineData(typeof(HardCodedImplementation))]
         public void ShouldHandleIEnumerableReferenceProperties(Type implementationType)
         {
             var sut = (IFlatDictionaryProvider)Activator.CreateInstance(implementationType);
@@ -140,7 +140,7 @@ namespace JOS.FlatDictionary.Tests
         [InlineData(typeof(Implementation1))]
         [InlineData(typeof(Implementation2))]
         [InlineData(typeof(Implementation3))]
-        [InlineData(typeof(Implementation4HardCoded))]
+        [InlineData(typeof(HardCodedImplementation))]
         public void ShouldHandleIEnumerableWithNestedReferenceProperties(Type implementationType)
         {
             var sut = (IFlatDictionaryProvider)Activator.CreateInstance(implementationType);

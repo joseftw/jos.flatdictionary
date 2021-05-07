@@ -14,7 +14,7 @@ namespace JOS.FlatDictionary.Benchmarks
         private static readonly Implementation1 Implementation1;
         private static readonly Implementation2 Implementation2;
         private static readonly Implementation3 Implementation3;
-        private static readonly Implementation4HardCoded Implementation4;
+        private static readonly HardCodedImplementation ImplementationHardCoded;
 
         static FlatDictionaryBenchmark()
         {
@@ -66,7 +66,7 @@ namespace JOS.FlatDictionary.Benchmarks
             Implementation1 = new Implementation1();
             Implementation2 = new Implementation2();
             Implementation3 = new Implementation3();
-            Implementation4 = new Implementation4HardCoded();
+            ImplementationHardCoded = new HardCodedImplementation();
         }
 
         [Benchmark(Baseline = true)]
@@ -88,9 +88,9 @@ namespace JOS.FlatDictionary.Benchmarks
         }
 
         [Benchmark]
-        public Dictionary<string, string> Implementation4Benchmark()
+        public Dictionary<string, string> ImplementationHardCodedBenchmark()
         {
-            return Implementation4.Execute(Data);
+            return ImplementationHardCoded.Execute(Data);
         }
     }
 }
