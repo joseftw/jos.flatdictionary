@@ -42,32 +42,30 @@ namespace JOS.FlatDictionary
 
                 if (property.PropertyType.IsValueTypeOrString())
                 {
-                    dictionary[key] = value switch
-                    {
-                        DateTime dateTime => dateTime.ToString("o"),
-                        bool @bool => @bool.ToString().ToLower(),
-                        _ => value.ToString()
-                    };
-                }
-                else if (value is IEnumerable enumerable)
-                {
-                    var counter = 0;
-                    foreach (var item in enumerable)
-                    {
-                        var itemKey = $"{key}[{counter++}]";
-                        if (!item.GetType().IsValueTypeOrString())
-                        {
-                            Flatten(dictionary, item, itemKey);
-                        }
-                        else
-                        {
-                            dictionary.Add(itemKey, item.FormatValue());
-                        }
-                    }
+                    dictionary[key] = value.ToStringValueType();
                 }
                 else
                 {
-                    Flatten(dictionary, value, key);
+                    if (value is IEnumerable enumerable)
+                    {
+                        var counter = 0;
+                        foreach (var item in enumerable)
+                        {
+                            var itemKey = $"{key}[{counter++}]";
+                            if (item.GetType().IsValueTypeOrString())
+                            {
+                                dictionary.Add(itemKey, item.ToStringValueType());
+                            }
+                            else
+                            {
+                                Flatten(dictionary, item, itemKey);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Flatten(dictionary, value, key);
+                    }
                 }
             }
         }

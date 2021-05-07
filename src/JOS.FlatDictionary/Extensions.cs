@@ -10,12 +10,12 @@ namespace JOS.FlatDictionary
             return type.IsValueType || type == typeof(string);
         }
 
-        internal static string FormatValue(this object value)
+        internal static string ToStringValueType(this object value)
         {
             return value switch
             {
                 DateTime dateTime => dateTime.ToString("o"),
-                bool boolean => boolean.ToString().ToLower(),
+                bool boolean => boolean.ToStringLowerCase(),
                 _ => value.ToString()
             };
         }
@@ -23,6 +23,11 @@ namespace JOS.FlatDictionary
         internal static bool IsIEnumerable(this Type type)
         {
             return type.IsAssignableTo(typeof(IEnumerable));
+        }
+
+        internal static string ToStringLowerCase(this bool boolean)
+        {
+            return boolean ? "true" : "false";
         }
     }
 }

@@ -42,7 +42,11 @@ namespace JOS.FlatDictionary
                     continue;
                 }
 
-                if (!property.PropertyType.IsValueTypeOrString())
+                if (property.PropertyType.IsValueTypeOrString())
+                {
+                    dictionary.Add(key, value.ToStringValueType());
+                }
+                else
                 {
                     if (value is IEnumerable enumerable)
                     {
@@ -51,13 +55,13 @@ namespace JOS.FlatDictionary
                         {
                             var itemKey = $"{key}[{counter++}]";
                             var itemType = item.GetType();
-                            if (!itemType.IsValueTypeOrString())
+                            if (itemType.IsValueTypeOrString())
                             {
-                                ExecuteInternal(item, dictionary, itemKey);
+                                dictionary.Add(itemKey, item.ToStringValueType());
                             }
                             else
                             {
-                                dictionary.Add(itemKey, item.FormatValue());
+                                ExecuteInternal(item, dictionary, itemKey);
                             }
                         }
                     }
@@ -65,10 +69,6 @@ namespace JOS.FlatDictionary
                     {
                         ExecuteInternal(value, dictionary, key);
                     }
-                }
-                else
-                {
-                    dictionary.Add(key, value.FormatValue());
                 }
             }
 
@@ -99,7 +99,7 @@ namespace JOS.FlatDictionary
             {
                 var getter = CompilePropertyGetter(propertyInfo);
                 CachedProperties[type].Add(propertyInfo, getter);
-                if (propertyInfo.PropertyType.IsValueTypeOrString())
+                if (!propertyInfo.PropertyType.IsValueTypeOrString())
                 {
                     if (propertyInfo.PropertyType.IsIEnumerable())
                     {
@@ -120,12 +120,16 @@ namespace JOS.FlatDictionary
             }
         }
 
+        // Inspired by Zanid Haytam
+        // https://blog.zhaytam.com/2020/11/17/expression-trees-property-getter/
         private static Func<object, object> CompilePropertyGetter(PropertyInfo property)
         {
-            var objectParameter = Expression.Parameter(typeof(object));
-            var typeAsExpression = Expression.TypeAs(objectParameter, property.DeclaringType);
-            var propertyExpression = Expression.Property(typeAsExpression, property);
-            var convertExpression = Expression.Convert(propertyExpression, typeof(object));
+            var objectType = typeof(object);
+            var objectParameter = Expression.Parameter(objectType);
+            var castExpression = Expression.TypeAs(objectParameter, property.DeclaringType);
+            var convertExpression = Expression.Convert(
+                Expression.Property(castExpression, property),
+                objectType);
             return Expression.Lambda<Func<object, object>>(
                 convertExpression,
                 objectParameter).Compile();
