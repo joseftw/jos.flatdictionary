@@ -33,4 +33,4 @@ result.ShouldContainKeyAndValue("Data.MyNestedClass.String", myClass.MyNestedCla
 ```
 
 ## More info
-https://josef.codes/flatten-csharp-object-to-dictionary/
+https://josef.codes/transform-csharp-objects-to-a-flat-string-dictionary/
