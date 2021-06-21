@@ -21,10 +21,10 @@ var myClass = new MyClass
 
 var result = sut.Execute(myClass, prefix: "Data");
 
-result.ShouldContainKeyAndValue($"Data.Boolean", "true");
-result.ShouldContainKeyAndValue($"Data.Guid", myClass.Guid.ToString());
-result.ShouldContainKeyAndValue($"Data.Integer", myClass.Integer.ToString());
-result.ShouldContainKeyAndValue($"Data.String", myClass.String);
+result.ShouldContainKeyAndValue("Data.Boolean", "true");
+result.ShouldContainKeyAndValue("Data.Guid", myClass.Guid.ToString());
+result.ShouldContainKeyAndValue("Data.Integer", myClass.Integer.ToString());
+result.ShouldContainKeyAndValue("Data.String", myClass.String);
 result.ShouldContainKeyAndValue("Data.MyNestedClass.Boolean", myClass.MyNestedClass.Boolean.ToString().ToLower());
 result.ShouldContainKeyAndValue("Data.MyNestedClass.Guid", myClass.MyNestedClass.Guid.ToString());
 result.ShouldContainKeyAndValue("Data.MyNestedClass.Integer", myClass.MyNestedClass.Integer.ToString());
