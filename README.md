@@ -1,5 +1,5 @@
 # JOS.FlatDictionary
-Transforms a C# object to a flat ```Dictionary<string, string```.
+Transforms a C# object to a flat ```Dictionary<string, string>```.
 
 ## Example
 ```csharp
