@@ -70,7 +70,7 @@ namespace JOS.FlatDictionary
             }
         }
 
-        private static IEnumerable<PropertyInfo> GetProperties(Type type)
+        private static PropertyInfo[] GetProperties(Type type)
         {
             if (CachedTypeProperties.TryGetValue(type, out var result))
             {
